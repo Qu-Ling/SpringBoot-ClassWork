@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanxi.Dao.HFMDao">
+    <!--根据id查询用户(登入)-->
+    <select id="queryUserId" parameterType="int" resultType="com.wanxi.pojo.User">
+        select userID, username, userpassword, usertype
+        from `usertable`
+        where userID = #{id}
+    </select>
+
+    <!--获取所有收支名称-->
+    <select id="getIEName" resultType="String">
+        select IEName
+        from `ietype`
+    </select>
+    <!--获取用户有的CB-->
+    <select id="getCardBank" resultType="String" parameterType="int">
+        SELECT CardBank
+        FROM card c
+                 LEFT JOIN usertable u on u.username = c.CardName
+        WHERE userID = #{userid};
+    </select>
+
+    <!--root用户查看成员账本-->
+    <select id="rootledger" parameterType="com.wanxi.pojo.query.LedgerQuery" resultType="com.wanxi.pojo.Ledger">
+        select `Time`,`IEName`,`IorE`,`Money`,`CardBank`,`beizhu`
+        FROM `ledger` A
+        LEFT JOIN `ietype` B ON A.IEId = B.IEId
+        LEFT JOIN `card` C ON A.CardId=C.CardId
+        <where>
+            <if test="time != null and time != ''">
+                and `Time` like concat('%',#{time},'%')
+            </if>
+        </where>
+    </select>
+    <!--非root用户查看自己账本-->
+    <select id="ledger" resultType="com.wanxi.pojo.Ledger">
+        select `Time`,`IEName`,`IorE`,`Money`,`CardBank`,`beizhu`
+        FROM `ledger` A
+        LEFT JOIN `ietype` B ON A.IEId = B.IEId
+        LEFT JOIN `card` C ON A.CardId=C.CardId
+        WHERE userID=#{userID}
+        <if test="ledgerQuery.time != null and ledgerQuery.time != ''">
+            AND `Time` LIKE concat('%',#{ledgerQuery.time},'%')
+        </if>
+    </select>
+
+
+    <!--根据收支名称和类型判断收支id-->
+    <select id="IEId" resultType="int">
+        select `IEId`
+        FROM `ietype`
+        WHERE `IEName` LIKE #{IEName}
+          AND `IorE` LIKE #{IorE}
+    </select>
+    <!--根据卡户和用户id判断卡id（默认一个人只能有一个银行的卡）-->
+    <select id="CardId" resultType="int">
+        select `CardId`
+        FROM `card` A
+                 LEFT JOIN `usertable` B
+                           ON A.Cardname = B.username
+        WHERE `userID` = #{userID}
+          AND `CardBank` LIKE CONCAT('%', '${CardBank}', '%');
+    </select>
+
+    <!--添加账单-->
+    <insert id="addLedger">
+        INSERT
+        IGNORE INTO ledger(`Time`, `IEId`,`CardId`,`Money`,`userID`,`beizhu`)
+        VALUES (
+        #{Time},
+        #{IEId},
+        #{CardId},
+        #{Money},
+        #{userID},
+        #{beizhu}
+        )
+    </insert>
+
+
+    <!--展示所有用户信息-->
+    <select id="userList" resultType="com.wanxi.pojo.User">
+        select userID, username, userpassword, usertype
+        from `usertable`
+    </select>
+    <!--根据name搜索用户信息-->
+    <select id="userListByName" resultType="com.wanxi.pojo.User" parameterType="com.wanxi.pojo.query.UserQuery">
+        select userID, username, userpassword, usertype
+        from `usertable`
+        <where>
+            <if test="username != null and username != ''">
+                and `username` like concat('%',#{username},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--添加用户-->
+    <insert id="addUser" parameterType="com.wanxi.pojo.User">
+        insert into usertable(username, userpassword, usertype)
+        values (#{username}, #{userpassword}, #{usertype})
+    </insert>
+    <!--修改用户-->
+    <update id="upDateUser" parameterType="com.wanxi.pojo.User">
+        update usertable
+        set username     = #{username},
+            userpassword = #{userpassword} usertype  = #{usertype}
+        where userID = #{userid}
+    </update>
+    <!--用户表根据ID删除用户-->
+    <delete id="usertableDeleteUserById" parameterType="int">
+        delete
+        from usertable
+        where userID = #{userID};
+    </delete>
+    <!--账本根据ID删除用户-->
+    <delete id="ledgerDeleteUserById" parameterType="int">
+        delete
+        from ledger
+        where userID =
+              #{userID};
+    </delete>
+
+
+</mapper>
