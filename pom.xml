@@ -5,11 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-<<<<<<< HEAD
         <version>3.2.5</version>
-=======
-        <version>3.4.0</version>
->>>>>>> a44b8c9080af375b6686ec0825eaf8c0b6eb218e
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.classwork</groupId>
@@ -31,10 +27,9 @@
         <url/>
     </scm>
     <properties>
-        <java.version>23</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
-<<<<<<< HEAD
         <!-- 引入druid依赖,数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -53,20 +48,11 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.4</version>
         </dependency>
-        <!-- mysql引入 -->
-        <!--<dependency>-->
-        <!--    <groupId>com.mysql</groupId>-->
-        <!--    <artifactId>mysql-connector-j</artifactId>-->
-        <!--    <scope>runtime</scope>-->
-        <!--</dependency>-->
         <!--web-->
-=======
->>>>>>> a44b8c9080af375b6686ec0825eaf8c0b6eb218e
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-<<<<<<< HEAD
         <!--Test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -74,16 +60,12 @@
             <scope>test</scope>
         </dependency>
         <!--开启springboot热部署调试-->
-=======
-
->>>>>>> a44b8c9080af375b6686ec0825eaf8c0b6eb218e
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-<<<<<<< HEAD
         <!--thymeleaf依赖,与jsp不兼容-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,8 +92,6 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-
-=======
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -122,7 +102,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
->>>>>>> a44b8c9080af375b6686ec0825eaf8c0b6eb218e
     </dependencies>
 
     <build>
@@ -130,10 +109,8 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-<<<<<<< HEAD
                 <version>3.2.5</version>
-=======
->>>>>>> a44b8c9080af375b6686ec0825eaf8c0b6eb218e
+
             </plugin>
         </plugins>
     </build>
