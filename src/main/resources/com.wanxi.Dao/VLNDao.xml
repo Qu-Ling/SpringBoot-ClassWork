@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanxi.Dao.VLNDao">
+    <!--获取所有收支年份-->
+    <select id="listYear" resultType="String">
+        select distinct DATE_FORMAT(Time, '%Y') time
+        from ledger
+        group by time
+    </select>
+    <!--    根据收支年份展示每月的收支金额,给1月份-->
+    <select id="getMon" parameterType="int" resultType="String" >
+        SELECT MONTH(Time) AS month
+        FROM ledger
+        WHERE YEAR(Time)=#{year}
+        GROUP BY  MONTH(Time)
+        ORDER BY  month;
+    </select>
+    <!--    根据收支年份展示每月的收支金额,给2收入-->
+    <select id="getIn" parameterType="int" resultType="String">
+        SELECT  sum(Money)
+        FROM ledger
+                 LEFT JOIN ietype i on ledger.IEId = i.IEId
+        WHERE YEAR(Time)=#{year} AND IorE="收入"
+        GROUP BY  MONTH(Time),IorE
+        ORDER BY  MONTH(Time);
+    </select>
+    <!--    根据收支年份展示每月的收支金额,给3支出-->
+    <select id="getOut" parameterType="int"  resultType="String" >
+        SELECT  sum(Money)
+        FROM ledger
+                 LEFT JOIN ietype i on ledger.IEId = i.IEId
+        WHERE YEAR(Time)=#{year} AND IorE="支出"
+        GROUP BY  MONTH(Time),IorE
+        ORDER BY  MONTH(Time);
+    </select>
+
+    <!--查看用户02在2024年5月份的收入情况-->
+    <select id="getMonthIE" parameterType="com.wanxi.pojo.MonthIE" resultType="com.wanxi.pojo.MMjson" >
+        SELECT sum(Money) as `value` ,IEName as `name`
+        FROM ledger l
+                 LEFT JOIN ietype i on l.IEId = i.IEId
+                 LEFT JOIN usertable u on l.userID = u.userID
+        WHERE YEAR(Time)=#{monthIE.year} AND MONTH(Time)=#{monthIE.month}  AND IorE=#{monthIE.IorE}
+        <if test="monthIE.userid != 0 and monthIE.userid != ''">
+            AND u.userID=#{monthIE.userid}
+        </if>
+        GROUP BY  MONTH(Time),IEName
+        ORDER BY  SUM(Money);
+    </select>
+
+    <!-- 选择展示用户-->
+    <select id="listUser" resultType="int">
+        SELECT userID
+        FROM usertable
+        ORDER BY userID;
+    </select>
+</mapper>
