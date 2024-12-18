@@ -2,6 +2,7 @@ package com.classwork.springbootclasswork.Contoller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class CWController {
@@ -17,5 +18,6 @@ public class CWController {
     public String demo() {
         return "demo";
     }
-
 }
+
+
